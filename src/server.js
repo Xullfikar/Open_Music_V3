@@ -1,10 +1,10 @@
-require("dotenv").config();
+require('dotenv').config();
 
-const Hapi = require("@hapi/hapi");
-const openMusic = require("./api/openMusic");
-const OpenMusicService = require("./services/postgres/OpenMusicService");
-const OpenMusicValidator = require("./validator/openMusic");
-const ClientError = require("./exceptions/ClientError");
+const Hapi = require('@hapi/hapi');
+const openMusic = require('./api/openMusic');
+const OpenMusicService = require('./services/postgres/OpenMusicService');
+const OpenMusicValidator = require('./validator/openMusic');
+const ClientError = require('./exceptions/ClientError');
 
 const init = async () => {
   const openMusicService = new OpenMusicService();
@@ -13,7 +13,7 @@ const init = async () => {
     host: process.env.HOST,
     routes: {
       cors: {
-        origin: ["*"],
+        origin: ['*'],
       },
     },
   });
@@ -26,12 +26,12 @@ const init = async () => {
     },
   });
 
-  server.ext("onPreResponse", (request, h) => {
+  server.ext('onPreResponse', (request, h) => {
     const { response } = request;
     if (response instanceof Error) {
       if (response instanceof ClientError) {
         const newResponse = h.response({
-          status: "fail",
+          status: 'fail',
           message: response.message,
         });
         newResponse.code(response.statusCode);
@@ -41,8 +41,8 @@ const init = async () => {
         return h.continue;
       }
       const newResponse = h.response({
-        status: "error",
-        message: "terjadi kegagalan pada server kami",
+        status: 'error',
+        message: 'terjadi kegagalan pada server kami',
       });
       newResponse.code(500);
       return newResponse;
