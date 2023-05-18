@@ -1,12 +1,13 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const Hapi = require('@hapi/hapi');
-const album = require('./api/album');
-const song = require('./api/song');
-const AlbumService = require('./services/postgres/AlbumService');
-const SongService = require('./services/postgres/SongService');
-const AlbumValidator = require('./validator/album');
-const ClientError = require('./exceptions/ClientError');
+const Hapi = require("@hapi/hapi");
+const album = require("./api/album");
+const song = require("./api/song");
+const AlbumService = require("./services/postgres/AlbumService");
+const SongService = require("./services/postgres/SongService");
+const AlbumValidator = require("./validator/album");
+const SongValidator = require("./validator/song");
+const ClientError = require("./exceptions/ClientError");
 
 const init = async () => {
   const albumService = new AlbumService();
@@ -16,7 +17,7 @@ const init = async () => {
     host: process.env.HOST,
     routes: {
       cors: {
-        origin: ['*'],
+        origin: ["*"],
       },
     },
   });
@@ -33,16 +34,16 @@ const init = async () => {
     plugin: song,
     options: {
       service: songService,
-      validator: AlbumValidator,
+      validator: SongValidator,
     },
   });
 
-  server.ext('onPreResponse', (request, h) => {
+  server.ext("onPreResponse", (request, h) => {
     const { response } = request;
     if (response instanceof Error) {
       if (response instanceof ClientError) {
         const newResponse = h.response({
-          status: 'fail',
+          status: "fail",
           message: response.message,
         });
         newResponse.code(response.statusCode);
@@ -52,10 +53,11 @@ const init = async () => {
         return h.continue;
       }
       const newResponse = h.response({
-        status: 'error',
-        message: 'terjadi kegagalan pada server kami',
+        status: "error",
+        message: "terjadi kegagalan pada server kami",
       });
       newResponse.code(500);
+      console.error(response);
       return newResponse;
     }
     return h.continue;
