@@ -1,8 +1,8 @@
-const autoBind = require("auto-bind");
+const autoBind = require('auto-bind');
 
 class AlbumHandler {
   constructor(service, validator) {
-    /*eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
+    /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
     this._service = service;
     this._validator = validator;
 
@@ -15,7 +15,7 @@ class AlbumHandler {
     const albumId = await this._service.addAlbum(request.payload);
 
     const response = h.response({
-      status: "success",
+      status: 'success',
       data: {
         albumId,
       },
@@ -28,7 +28,7 @@ class AlbumHandler {
     const { id } = request.params;
     const album = await this._service.getAlbumById(id);
     return {
-      status: "success",
+      status: 'success',
       data: {
         album,
       },
@@ -42,8 +42,8 @@ class AlbumHandler {
     await this._service.editAlbumById(id, request.payload);
 
     return {
-      status: "success",
-      message: "Album berhasil diperbarui",
+      status: 'success',
+      message: 'Album berhasil diperbarui',
     };
   }
 
@@ -51,8 +51,8 @@ class AlbumHandler {
     const { id } = request.params;
     await this._service.deleteAlbumById(id);
     return {
-      status: "success",
-      message: "Album berhasil dihapus",
+      status: 'success',
+      message: 'Album berhasil dihapus',
     };
   }
 }

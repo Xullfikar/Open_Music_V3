@@ -1,8 +1,8 @@
-const autoBind = require("auto-bind");
+const autoBind = require('auto-bind');
 
 class SongHandler {
   constructor(service, validator) {
-    /*eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
+    /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
     this._service = service;
     this._validator = validator;
 
@@ -15,7 +15,7 @@ class SongHandler {
     const songId = await this._service.addSong(request.payload);
 
     const response = h.response({
-      status: "success",
+      status: 'success',
       data: {
         songId,
       },
@@ -29,7 +29,7 @@ class SongHandler {
     const searchPerformer = request.query.performer;
     const songs = await this._service.getSongs(searchTitle, searchPerformer);
     return {
-      status: "success",
+      status: 'success',
       data: {
         songs,
       },
@@ -40,7 +40,7 @@ class SongHandler {
     const { id } = request.params;
     const song = await this._service.getSongById(id);
     return {
-      status: "success",
+      status: 'success',
       data: {
         song,
       },
@@ -54,8 +54,8 @@ class SongHandler {
     await this._service.editSongById(id, request.payload);
 
     return {
-      status: "success",
-      message: "Song berhasil diperbarui",
+      status: 'success',
+      message: 'Song berhasil diperbarui',
     };
   }
 
@@ -63,8 +63,8 @@ class SongHandler {
     const { id } = request.params;
     await this._service.deleteSongById(id);
     return {
-      status: "success",
-      message: "Song berhasil dihapus",
+      status: 'success',
+      message: 'Song berhasil dihapus',
     };
   }
 }
