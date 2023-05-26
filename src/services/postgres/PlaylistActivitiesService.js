@@ -1,6 +1,6 @@
-const { nanoid } = require("nanoid");
-const { Pool } = require("pg");
-const InvariantError = require("../../exceptions/InvariantError");
+const { nanoid } = require('nanoid');
+const { Pool } = require('pg');
+const InvariantError = require('../../exceptions/InvariantError');
 
 class PlaylistActivitiesService {
   constructor() {
@@ -10,39 +10,39 @@ class PlaylistActivitiesService {
 
   async addPlaylistActivities(playlistId, songId, userId) {
     const id = `activities-${nanoid(16)}`;
-    const action = "add";
+    const action = 'add';
     const time = new Date().toISOString();
     const query = {
-      text: "INSERT INTO playlist_song_activities VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
+      text: 'INSERT INTO playlist_song_activities VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
       values: [id, playlistId, songId, userId, action, time],
     };
 
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new InvariantError("Activities gagal ditambahkan");
+      throw new InvariantError('Activities gagal ditambahkan');
     }
   }
 
   async deletePlaylistActivities(playlistId, songId, userId) {
     const id = `activities-${nanoid(16)}`;
-    const action = "delete";
+    const action = 'delete';
     const time = new Date().toISOString();
     const query = {
-      text: "INSERT INTO playlist_song_activities VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
+      text: 'INSERT INTO playlist_song_activities VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
       values: [id, playlistId, songId, userId, action, time],
     };
 
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new InvariantError("Activities gagal ditambahkan");
+      throw new InvariantError('Activities gagal ditambahkan');
     }
   }
 
   async getPlaylistActivities(playlistId) {
     const query = {
-      text: "SELECT u.username AS username, s.title AS title, psa.action AS action, psa.time AS time FROM playlist_song_activities psa LEFT JOIN users u ON psa.user_id = u.id LEFT JOIN song s ON psa.song_id = s.id WHERE psa.playlist_id = $1",
+      text: 'SELECT u.username AS username, s.title AS title, psa.action AS action, psa.time AS time FROM playlist_song_activities psa LEFT JOIN users u ON psa.user_id = u.id LEFT JOIN song s ON psa.song_id = s.id WHERE psa.playlist_id = $1',
       values: [playlistId],
     };
 

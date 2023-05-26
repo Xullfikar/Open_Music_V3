@@ -1,7 +1,8 @@
-const autoBind = require("auto-bind");
+const autoBind = require('auto-bind');
 
 class UsersHandler {
   constructor(service, validator) {
+    /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
     this._service = service;
     this._validator = validator;
 
@@ -19,7 +20,7 @@ class UsersHandler {
     });
 
     const response = h.response({
-      status: "success",
+      status: 'success',
       data: {
         userId,
       },

@@ -1,7 +1,8 @@
-const autoBind = require("auto-bind");
+const autoBind = require('auto-bind');
 
 class PlaylistActivitiesHandler {
   constructor(playlistActivitiesService, playlistService) {
+    /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
     this._playlistActivitiesService = playlistActivitiesService;
     this._playlistService = playlistService;
     autoBind(this);
@@ -12,8 +13,7 @@ class PlaylistActivitiesHandler {
     const { id: credentialId } = request.auth.credentials;
 
     await this._playlistService.verifyPlaylistAccess(id, credentialId);
-    const activities =
-      await this._playlistActivitiesService.getPlaylistActivities(id);
+    const activities = await this._playlistActivitiesService.getPlaylistActivities(id);
 
     const result = {
       playlistId: id,
@@ -21,7 +21,7 @@ class PlaylistActivitiesHandler {
     };
 
     return {
-      status: "success",
+      status: 'success',
       data: result,
     };
   }

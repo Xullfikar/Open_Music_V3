@@ -1,7 +1,8 @@
-const autoBind = require("auto-bind");
+const autoBind = require('auto-bind');
 
 class AuthenticationsHandler {
   constructor(authenticationsService, usersService, tokenManager, validator) {
+    /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
     this._authenticationsService = authenticationsService;
     this._usersService = usersService;
     this._tokenManager = tokenManager;
@@ -16,7 +17,7 @@ class AuthenticationsHandler {
     const { username, password } = request.payload;
     const id = await this._usersService.verifyUserCredential(
       username,
-      password
+      password,
     );
 
     const accessToken = this._tokenManager.generateAccessToken({ id });
@@ -25,7 +26,7 @@ class AuthenticationsHandler {
     await this._authenticationsService.addRefreshToken(refreshToken);
 
     const response = h.response({
-      status: "success",
+      status: 'success',
       data: {
         accessToken,
         refreshToken,
@@ -35,7 +36,7 @@ class AuthenticationsHandler {
     return response;
   }
 
-  async putAuthenticationHandler(request, h) {
+  async putAuthenticationHandler(request) {
     this._validator.validatePutAuthenticationPayload(request.payload);
 
     const { refreshToken } = request.payload;
@@ -44,14 +45,14 @@ class AuthenticationsHandler {
 
     const accessToken = this._tokenManager.generateAccessToken({ id });
     return {
-      status: "success",
+      status: 'success',
       data: {
         accessToken,
       },
     };
   }
 
-  async deleteAuthenticationHandler(request, h) {
+  async deleteAuthenticationHandler(request) {
     this._validator.validateDeleteAuthenticationPayload(request.payload);
 
     const { refreshToken } = request.payload;
@@ -59,8 +60,8 @@ class AuthenticationsHandler {
     await this._authenticationsService.deleteRefreshToken(refreshToken);
 
     return {
-      status: "success",
-      message: "Refresh token berhasil dihapus",
+      status: 'success',
+      message: 'Refresh token berhasil dihapus',
     };
   }
 }

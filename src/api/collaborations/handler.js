@@ -1,12 +1,13 @@
-const autoBind = require("auto-bind");
+const autoBind = require('auto-bind');
 
 class CollaborationsHandler {
   constructor(
     collaborationsService,
     playlistsService,
     usersService,
-    validator
+    validator,
   ) {
+    /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
     this._collaborationsService = collaborationsService;
     this._playlistsService = playlistsService;
     this._usersService = usersService;
@@ -24,12 +25,12 @@ class CollaborationsHandler {
     await this._playlistsService.verifyPlaylistOwner(playlistId, credentialId);
     const collaborationId = await this._collaborationsService.addCollaboration(
       playlistId,
-      userId
+      userId,
     );
 
     const response = h.response({
-      status: "success",
-      message: "Kolaborasi berhasil ditambahkan",
+      status: 'success',
+      message: 'Kolaborasi berhasil ditambahkan',
       data: {
         collaborationId,
       },
@@ -38,7 +39,7 @@ class CollaborationsHandler {
     return response;
   }
 
-  async deleteCollaborationHandler(request, h) {
+  async deleteCollaborationHandler(request) {
     this._validator.validateCollaborationPayload(request.payload);
     const { id: credentialId } = request.auth.credentials;
     const { playlistId, userId } = request.payload;
@@ -47,8 +48,8 @@ class CollaborationsHandler {
     await this._collaborationsService.deleteCollaboration(playlistId, userId);
 
     return {
-      status: "success",
-      message: "Kolaborasi berhasil dihapus",
+      status: 'success',
+      message: 'Kolaborasi berhasil dihapus',
     };
   }
 }
