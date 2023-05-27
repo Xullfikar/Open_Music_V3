@@ -1,4 +1,5 @@
 require("dotenv").config();
+const config = require("./utils/config");
 
 const Hapi = require("@hapi/hapi");
 const Jwt = require("@hapi/jwt");
@@ -50,11 +51,15 @@ const uploads = require("./api/uploads");
 const StorageService = require("./services/storage/StorageService");
 const UploadsValidator = require("./validator/uploads");
 
+// cache
+const CacheService = require("./services/reddis/CacheService");
+
 const ClientError = require("./exceptions/ClientError");
 
 const init = async () => {
+  const cacheService = new CacheService();
   const collaborationsService = new CollaborationsService();
-  const albumService = new AlbumService();
+  const albumService = new AlbumService(cacheService);
   const songService = new SongService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
@@ -65,8 +70,8 @@ const init = async () => {
   );
 
   const server = Hapi.server({
-    port: process.env.PORT,
-    host: process.env.HOST,
+    port: config.app.port,
+    host: config.app.host,
     routes: {
       cors: {
         origin: ["*"],
