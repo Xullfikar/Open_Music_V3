@@ -1,4 +1,4 @@
-const autoBind = require("auto-bind");
+const autoBind = require('auto-bind');
 
 class AlbumHandler {
   constructor(albumService, songService, validator) {
@@ -16,7 +16,7 @@ class AlbumHandler {
     const albumId = await this._albumService.addAlbum(request.payload);
 
     const response = h.response({
-      status: "success",
+      status: 'success',
       data: {
         albumId,
       },
@@ -39,7 +39,7 @@ class AlbumHandler {
     };
 
     return {
-      status: "success",
+      status: 'success',
       data: {
         album,
       },
@@ -53,8 +53,8 @@ class AlbumHandler {
     await this._albumService.editAlbumById(id, request.payload);
 
     return {
-      status: "success",
-      message: "Album berhasil diperbarui",
+      status: 'success',
+      message: 'Album berhasil diperbarui',
     };
   }
 
@@ -62,8 +62,8 @@ class AlbumHandler {
     const { id } = request.params;
     await this._albumService.deleteAlbumById(id);
     return {
-      status: "success",
-      message: "Album berhasil dihapus",
+      status: 'success',
+      message: 'Album berhasil dihapus',
     };
   }
 
@@ -76,8 +76,8 @@ class AlbumHandler {
     await this._albumService.addAlbumLikedByUser(albumId, userId);
 
     const response = h.response({
-      status: "success",
-      message: "Berhasil menambahkan like ke album",
+      status: 'success',
+      message: 'Berhasil menambahkan like ke album',
     });
 
     response.code(201);
@@ -90,8 +90,8 @@ class AlbumHandler {
     await this._albumService.deleteAlbumLikedByUser(albumId, userId);
 
     const response = h.response({
-      status: "success",
-      message: "Berhasil menghapus like dari album",
+      status: 'success',
+      message: 'Berhasil menghapus like dari album',
     });
 
     return response;
@@ -103,13 +103,13 @@ class AlbumHandler {
     const { value, from } = await this._albumService.getAlbumLiked(id);
 
     const response = h.response({
-      status: "success",
+      status: 'success',
       data: {
         likes: Number(value),
       },
     });
 
-    response.header("X-Data-Source", from);
+    response.header('X-Data-Source', from);
 
     return response;
   }

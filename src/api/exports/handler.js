@@ -1,7 +1,8 @@
-const autoBind = require("auto-bind");
+const autoBind = require('auto-bind');
 
 class ExportsHandler {
   constructor(producerService, playlistService, validator) {
+    /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
     this._producerService = producerService;
     this._playlistService = playlistService;
     this._validator = validator;
@@ -22,13 +23,13 @@ class ExportsHandler {
 
     await this._playlistService.verifyPlaylistOwner(playlistId, credentialId);
     await this._producerService.sendMessage(
-      "export:playlist",
-      JSON.stringify(message)
+      'export:playlist',
+      JSON.stringify(message),
     );
 
     const response = h.response({
-      status: "success",
-      message: "Permintaan Anda sedang kami proses",
+      status: 'success',
+      message: 'Permintaan Anda sedang kami proses',
     });
     response.code(201);
     return response;

@@ -1,14 +1,15 @@
-const redis = require("redis");
-const config = require("../../utils/config");
+const redis = require('redis');
+const config = require('../../utils/config');
 
 class CacheService {
   constructor() {
+    /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
     this._client = redis.createClient({
       socket: {
         host: config.redis.host,
       },
     });
-    this._client.on("error", (error) => {
+    this._client.on('error', (error) => {
       console.error(error);
     });
     this._client.connect();
@@ -22,7 +23,6 @@ class CacheService {
 
   async get(key) {
     const result = await this._client.get(key);
-    // if (result === null) throw new Error("Cache tidak ditemukan");
     return result;
   }
 
