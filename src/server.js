@@ -1,44 +1,49 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const Hapi = require('@hapi/hapi');
-const Jwt = require('@hapi/jwt');
+const Hapi = require("@hapi/hapi");
+const Jwt = require("@hapi/jwt");
 
 // album
-const album = require('./api/album');
-const AlbumService = require('./services/postgres/AlbumService');
-const AlbumValidator = require('./validator/album');
+const album = require("./api/album");
+const AlbumService = require("./services/postgres/AlbumService");
+const AlbumValidator = require("./validator/album");
 
 // song
-const song = require('./api/song');
-const SongService = require('./services/postgres/SongService');
-const SongValidator = require('./validator/song');
+const song = require("./api/song");
+const SongService = require("./services/postgres/SongService");
+const SongValidator = require("./validator/song");
 
 // users
-const users = require('./api/users');
-const UsersService = require('./services/postgres/UsersService');
-const UsersValidator = require('./validator/users');
+const users = require("./api/users");
+const UsersService = require("./services/postgres/UsersService");
+const UsersValidator = require("./validator/users");
 
 // authentications
-const authentications = require('./api/authentications');
-const AuthenticationsService = require('./services/postgres/AuthenticationsService');
-const TokenManager = require('./tokenize/TokenManager');
-const AuthenticationsValidator = require('./validator/authentications');
+const authentications = require("./api/authentications");
+const AuthenticationsService = require("./services/postgres/AuthenticationsService");
+const TokenManager = require("./tokenize/TokenManager");
+const AuthenticationsValidator = require("./validator/authentications");
 
 // playlists
-const playlists = require('./api/playlists');
-const PlaylistsService = require('./services/postgres/PlaylistsService');
-const PlaylistsValidator = require('./validator/playlists');
+const playlists = require("./api/playlists");
+const PlaylistsService = require("./services/postgres/PlaylistsService");
+const PlaylistsValidator = require("./validator/playlists");
 
 // collaborations
-const collaborations = require('./api/collaborations');
-const CollaborationsService = require('./services/postgres/CollaborationsService');
-const CollaborationsValidator = require('./validator/collaborations');
+const collaborations = require("./api/collaborations");
+const CollaborationsService = require("./services/postgres/CollaborationsService");
+const CollaborationsValidator = require("./validator/collaborations");
 
 // Activities
-const activities = require('./api/playlistActivities');
-const PlaylistActivitiesService = require('./services/postgres/PlaylistActivitiesService');
+const activities = require("./api/playlistActivities");
+const PlaylistActivitiesService = require("./services/postgres/PlaylistActivitiesService");
 
-const ClientError = require('./exceptions/ClientError');
+// Exports
+const _exports = require("./api/exports");
+const ProducerService = require("./services/rabbitmq/ProducerService");
+const ExportsValidator = require("./validator/exports");
+
+const ClientError = require("./exceptions/ClientError");
 
 const init = async () => {
   const collaborationsService = new CollaborationsService();
@@ -54,7 +59,7 @@ const init = async () => {
     host: process.env.HOST,
     routes: {
       cors: {
-        origin: ['*'],
+        origin: ["*"],
       },
     },
   });
@@ -65,7 +70,7 @@ const init = async () => {
     },
   ]);
 
-  server.auth.strategy('openmusic_jwt', 'jwt', {
+  server.auth.strategy("openmusic_jwt", "jwt", {
     keys: process.env.ACCESS_TOKEN_KEY,
     verify: {
       aud: false,
@@ -137,14 +142,22 @@ const init = async () => {
         playlistsService,
       },
     },
+    {
+      plugin: _exports,
+      options: {
+        producerService: ProducerService,
+        playlistsService,
+        validator: ExportsValidator,
+      },
+    },
   ]);
 
-  server.ext('onPreResponse', (request, h) => {
+  server.ext("onPreResponse", (request, h) => {
     const { response } = request;
     if (response instanceof Error) {
       if (response instanceof ClientError) {
         const newResponse = h.response({
-          status: 'fail',
+          status: "fail",
           message: response.message,
         });
         newResponse.code(response.statusCode);
@@ -154,8 +167,8 @@ const init = async () => {
         return h.continue;
       }
       const newResponse = h.response({
-        status: 'error',
-        message: 'terjadi kegagalan pada server kami',
+        status: "error",
+        message: "terjadi kegagalan pada server kami",
       });
       newResponse.code(500);
       console.error(response);
